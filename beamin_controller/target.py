@@ -45,13 +45,16 @@ class Target():
             return False
 
     def start(self):
-        requests.get(self.url('info-beamer/start'))
+        r = requests.get(self.url('info-beamer/start'))
+        print('{}: {}'.format(self.hostname, r.text))
 
     def stop(self):
-        requests.get(self.url('info-beamer/stop'))
+        r = requests.get(self.url('info-beamer/stop'))
+        print('{}: {}'.format(self.hostname, r.text))
 
     def restart(self):
-        requests.get(self.url('info-beamer/restart'))
+        r = requests.get(self.url('info-beamer/restart'))
+        print('{}: {}'.format(self.hostname, r.text))
 
     def push_all(self, path):
         shutil.make_archive('node', 'zip', path)

@@ -5,28 +5,37 @@ import sys
 from .target import Target
 
 
-def list_targets():
+def get_targets(only_pingable=True):
     config = json.load(open('targets.json'))
     targets = [Target(t['location']) for t in config['targets']]
+
+    if only_pingable:
+        targets = [target for target in targets if target.ping()]
+
+    return targets
+
+
+def list_targets():
+    targets = get_targets(only_pingable=False)
 
     for i, target in enumerate(targets):
         print('{} {:<20} {}'.format(i, target.hostname, target.ip))
 
 
 def start_targets():
-    config = json.load(open('targets.json'))
-    targets = [Target(t['location']) for t in config['targets']]
-    targets = [target for target in targets if target.ping()]
-
+    targets = get_targets()
     for target in targets:
         target.start()
 
 
-def push_node(path):
-    config = json.load(open('targets.json'))
-    targets = [Target(t['location']) for t in config['targets']]
-    targets = [target for target in targets if target.ping()]
+def stop_targets():
+    targets = get_targets()
+    for target in targets:
+        target.stop()
 
+
+def push_node(path):
+    targets = get_targets()
     for target in targets:
         target.push_all(path)
 
@@ -45,6 +54,9 @@ def main():
 
     if args.start:
         start_targets()
+
+    if args.stop:
+        stop_targets()
 
     if args.push:
         push_node(args.push)
