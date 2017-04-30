@@ -19,7 +19,10 @@ def list_targets():
     targets = get_targets(only_pingable=False)
 
     for i, target in enumerate(targets):
-        print('{} {:<20} {}'.format(i, target.hostname, target.ip))
+        status = target.check_status().name
+        hostname = target.hostname or ''
+        ip = target.ip or ''
+        print('{} {:<20} {:<15} {}'.format(i, hostname, ip, status))
 
 
 def start_targets():

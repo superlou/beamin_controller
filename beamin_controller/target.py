@@ -2,6 +2,7 @@ import socket
 import urllib.request
 import shutil
 import requests
+from enum import Enum
 
 
 class Target():
@@ -44,6 +45,16 @@ class Target():
         else:
             return False
 
+    def check_status(self):
+        if not self.ping():
+            return TargetStatus.NO_RESPONSE
+
+        r = requests.get(self.url('info-beamer/status'))
+        if r.text == 'running':
+            return TargetStatus.INFO_BEAMER_RUNNING
+        else:
+            return TargetStatus.INFO_BEAMER_STOPPED
+
     def start(self):
         r = requests.get(self.url('info-beamer/start'))
         print('{}: {}'.format(self.hostname, r.text))
@@ -61,3 +72,9 @@ class Target():
         files = {'node.zip': open('node.zip', 'rb')}
         r = requests.post(self.url('node/push'), files=files)
         print('{}: {}'.format(self.hostname, r.text))
+
+
+class TargetStatus(Enum):
+    NO_RESPONSE = 0
+    INFO_BEAMER_STOPPED = 1
+    INFO_BEAMER_RUNNING = 2

@@ -3,7 +3,7 @@ import json
 from random import randint
 from asciimatics.screen import Screen
 from time import sleep
-from .target import Target
+from .target import Target, TargetStatus
 
 def status_board(screen, targets):
     while True:
@@ -16,10 +16,14 @@ def status_board(screen, targets):
             else:
                 screen.print_at('unresolved', 20, i, Screen.COLOUR_YELLOW)
 
-            if target.ping():
-                screen.print_at('OK         ', 40, i)
-            else:
-                screen.print_at('no response', 40, i, Screen.COLOUR_RED)
+            status = target.check_status()
+            if status == TargetStatus.NO_RESPONSE:
+                screen.print_at('No Response', 40, i, Screen.COLOUR_RED)
+            elif status == TargetStatus.INFO_BEAMER_STOPPED:
+                screen.print_at('Stopped    ', 40, i, Screen.COLOUR_RED)
+            elif status == TargetStatus.INFO_BEAMER_RUNNING:
+                screen.print_at('Running    ', 40, i, Screen.COLOUR_GREEN)
+
 
         ev = screen.get_key()
         if ev in (ord('Q'), ord('q')):
