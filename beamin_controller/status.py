@@ -34,7 +34,7 @@ def status_board(screen, targets):
 
 
 def main():
-    config = json.load(open('targets.json'))
+    config = json.load(open('config.json'))
     targets = [Target(t['location']) for t in config['targets']]
 
     Screen.wrapper(status_board, arguments=(targets,))
