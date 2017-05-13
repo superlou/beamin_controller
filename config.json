@@ -12,5 +12,16 @@
     {
       "location": "pumpkinpi"
     }
+  ],
+  "node_root": "~/workspace/next-beamer",
+  "push_groups": [
+    {
+      "name": "default",
+      "include": "*"
+    },
+    {
+      "name": "data",
+      "include": "data_*.json"
+    }
   ]
 }
