@@ -1,6 +1,5 @@
 import socket
 import urllib.request
-import shutil
 import requests
 from enum import Enum
 
@@ -67,8 +66,7 @@ class Target():
         r = requests.get(self.url('info-beamer/restart'))
         print('{}: {}'.format(self.hostname, r.text))
 
-    def push_all(self, path):
-        shutil.make_archive('node', 'zip', path)
+    def push(self, zip_path):
         files = {'node.zip': open('node.zip', 'rb')}
         r = requests.post(self.url('node/push'), files=files)
         print('{}: {}'.format(self.hostname, r.text))

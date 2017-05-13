@@ -17,11 +17,12 @@
   "push_groups": [
     {
       "name": "default",
-      "include": "*"
+      "include": "data_*.json",
+      "exclude": "data_slides.json"
     },
     {
-      "name": "data",
-      "include": "data_*.json"
+      "name": "all",
+      "include": "*"
     }
   ]
 }

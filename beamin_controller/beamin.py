@@ -2,7 +2,9 @@
 import argparse
 import json
 import sys
+import shutil
 from .target import Target
+from .packager import Packager
 
 
 def get_targets(only_pingable=True):
@@ -37,10 +39,43 @@ def stop_targets():
         target.stop()
 
 
-def push_node(path):
-    targets = get_targets()
-    for target in targets:
-        target.push_all(path)
+def package_group(packager, group):
+    include = group.get('include', ['*'])
+    exclude = group.get('exclude', [])
+
+    if not isinstance(include, list):
+        include = [include]
+
+    if not isinstance(exclude, list):
+        exclude = [exclude]        
+
+    packager.add_matching(include, exclude)
+
+
+def push_node(group_names):
+    config = json.load(open('config.json'))
+    push_groups = config['push_groups']
+
+    packager = Packager(config['node_root'], 'node.zip')
+
+    for name in group_names:
+        name_found = False
+
+        for group in push_groups:
+            if group['name'] == name:
+                name_found = True
+                package_group(packager, group)
+
+        if not name_found:
+            group_names.remove(name)
+            print('Push group "{}" not found!'.format(name))
+
+    if len(group_names) > 0:
+        print("Pushing data for group(s): {}".format(', '.join(group_names)))
+
+        targets = get_targets()
+        for target in targets:
+            target.push('node.zip')
 
 
 
@@ -65,7 +100,6 @@ def parse_args(args=None):
 
     if isinstance(args.push, list) and (len(args.push) == 0):
         args.push.append('default')
-        print(args)
 
     return args
 
