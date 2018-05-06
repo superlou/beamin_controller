@@ -57,3 +57,7 @@ $ beamin --push all   # Send the data in the group named all
 ```
 
 Multiple groups may be specified in the same push command.
+
+## Credits
+
+SSDP service discovery based on [library by Dan Krause](https://gist.github.com/dankrause/6000248).

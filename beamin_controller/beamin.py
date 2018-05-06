@@ -3,8 +3,10 @@ import argparse
 import json
 import sys
 import shutil
+import socket
 from .target import Target
 from .packager import Packager
+from .ssdp import discover
 
 
 def get_targets(only_pingable=True):
@@ -47,7 +49,7 @@ def package_group(packager, group):
         include = [include]
 
     if not isinstance(exclude, list):
-        exclude = [exclude]        
+        exclude = [exclude]
 
     packager.add_matching(include, exclude)
 
@@ -78,7 +80,6 @@ def push_node(group_names):
             target.push('node.zip')
 
 
-
 class ExtendAction(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
         items = getattr(namespace, self.dest) or []
@@ -95,6 +96,7 @@ def parse_args(args=None):
     group = parser.add_mutually_exclusive_group()
     group.add_argument('-s', '--start', help='start info-beamer', action='store_true')
     group.add_argument('-x', '--stop', help='stop info-beamer', action='store_true')
+    group.add_argument('-d', '--discover', help='discover targets using SSDP', action='store_true')
 
     args = parser.parse_args(args)
 
@@ -119,6 +121,9 @@ def main():
 
     if args.push:
         push_node(args.push)
+
+    if args.discover:
+        discover('beamin_target:control')
 
 
 if __name__ == '__main__':
