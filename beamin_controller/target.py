@@ -37,7 +37,7 @@ class Target():
     def ping(self):
         if self.ip:
             try:
-                requests.get(self.url('ping'))
+                requests.get(self.url('ping'), timeout=0.2)
                 return True
             except:
                 return False
