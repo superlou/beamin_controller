@@ -41,6 +41,26 @@ def stop_targets(targets):
         target.stop()
 
 
+def restart_targets(targets):
+    for target in targets:
+        target.restart()
+
+
+def start_targets_services(targets):
+    for target in targets:
+        target.start_services()
+
+
+def stop_targets_services(targets):
+    for target in targets:
+        target.stop_services()
+
+
+def restart_targets_services(targets):
+    for target in targets:
+        target.restart_services()
+
+
 def package_group(packager, group):
     include = group.get('include', ['*'])
     exclude = group.get('exclude', [])
@@ -99,8 +119,18 @@ def parse_args(args=None):
                         action='store_true')
 
     group = parser.add_mutually_exclusive_group()
-    group.add_argument('-s', '--start', help='start info-beamer', action='store_true')
-    group.add_argument('-x', '--stop', help='stop info-beamer', action='store_true')
+    group.add_argument('-s', '--start', action='store_true',
+                       help='start info-beamer and services')
+    group.add_argument('-x', '--stop', action='store_true',
+                       help='stop info-beamer and services')
+    group.add_argument('-r', '--restart', action='store_true',
+                       help='restart info-beamer and services')
+    group.add_argument('-ss', '--start-services', action='store_true',
+                       help='start services only')
+    group.add_argument('-xs', '--stop-services', action='store_true',
+                       help='stop services only')
+    group.add_argument('-rs', '--restart-services', action='store_true',
+                       help='restart services only')
 
     args = parser.parse_args(args)
 
@@ -127,6 +157,18 @@ def main():
 
     if args.stop:
         stop_targets(targets)
+
+    if args.restart:
+        restart_targets(targets)
+
+    if args.start_services:
+        start_targets_services(targets)
+
+    if args.stop_services:
+        stop_targets_services(targets)
+
+    if args.restart_services:
+        restart_targets_services(targets)
 
     if args.push:
         push_node(args.push, targets)

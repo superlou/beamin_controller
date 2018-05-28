@@ -66,6 +66,18 @@ class Target():
         r = requests.get(self.url('info-beamer/restart'))
         print('{}: {}'.format(self.hostname, r.text))
 
+    def start_services(self):
+        r = requests.get(self.url('services/start'))
+        print('{}: {}'.format(self.hostname, r.text))
+
+    def stop_services(self):
+        r = requests.get(self.url('services/stop'))
+        print('{}: {}'.format(self.hostname, r.text))
+
+    def restart_services(self):
+        r = requests.get(self.url('services/restart'))
+        print('{}: {}'.format(self.hostname, r.text))
+
     def push(self, zip_path):
         files = {'node.zip': open('node.zip', 'rb')}
         r = requests.post(self.url('node/push'), files=files)
