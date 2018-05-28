@@ -31,36 +31,6 @@ def list_targets(targets):
         print('{} {:<20} {:<15} {}'.format(i, hostname, ip, status))
 
 
-def start_targets(targets):
-    for target in targets:
-        target.start()
-
-
-def stop_targets(targets):
-    for target in targets:
-        target.stop()
-
-
-def restart_targets(targets):
-    for target in targets:
-        target.restart()
-
-
-def start_targets_services(targets):
-    for target in targets:
-        target.start_services()
-
-
-def stop_targets_services(targets):
-    for target in targets:
-        target.stop_services()
-
-
-def restart_targets_services(targets):
-    for target in targets:
-        target.restart_services()
-
-
 def package_group(packager, group):
     include = group.get('include', ['*'])
     exclude = group.get('exclude', [])
@@ -74,11 +44,11 @@ def package_group(packager, group):
     packager.add_matching(include, exclude)
 
 
-def push_node(group_names, targets):
+def package_node(group_names, zip_filename='node.zip'):
     config = json.load(open('config.json'))
     push_groups = config['push_groups']
 
-    packager = Packager(config['node_root'], 'node.zip')
+    packager = Packager(config['node_root'], zip_filename)
 
     for name in group_names:
         name_found = False
@@ -93,10 +63,7 @@ def push_node(group_names, targets):
             print('Push group "{}" not found!'.format(name))
 
     if len(group_names) > 0:
-        print("Pushing data for group(s): {}".format(', '.join(group_names)))
-
-        for target in targets:
-            target.push('node.zip')
+        print("Packaged data for group(s): {}".format(', '.join(group_names)))
 
 
 class ExtendAction(argparse.Action):
@@ -147,34 +114,39 @@ def main():
         list_targets(get_targets(only_pingable=False))
         sys.exit()
 
+    if args.discover:
+        discover('beamin_target:control')
+        sys.exit()
+
+    if args.push:
+        package_node(args.push, 'node.zip')
+
     if args.target:
         targets = get_targets(select=args.target)
     else:
         targets = get_targets()
 
-    if args.start:
-        start_targets(targets)
+    for target in targets:
+        if args.start:
+            target.start()
 
-    if args.stop:
-        stop_targets(targets)
+        if args.stop:
+            target.stop()
 
-    if args.restart:
-        restart_targets(targets)
+        if args.restart:
+            target.restart()
 
-    if args.start_services:
-        start_targets_services(targets)
+        if args.start_services:
+            target.start_services()
 
-    if args.stop_services:
-        stop_targets_services(targets)
+        if args.stop_services:
+            target.stop_services()
 
-    if args.restart_services:
-        restart_targets_services(targets)
+        if args.restart_services:
+            target.restart_services()
 
-    if args.push:
-        push_node(args.push, targets)
-
-    if args.discover:
-        discover('beamin_target:control')
+        if args.push:
+            target.push('node.zip')
 
 
 if __name__ == '__main__':
