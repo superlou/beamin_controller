@@ -4,13 +4,28 @@
       "location": "127.0.0.1"
     },
     {
-      "location": "raspberrypi"
+      "location": "loupi1"
     },
     {
-      "location": "blueberrypi"
+      "location": "loupi2"
     },
     {
-      "location": "pumpkinpi"
+      "location": "ans01"
+    },
+    {
+      "location": "ans02"
+    },
+    {
+      "location": "ans03"
+    },
+    {
+      "location": "ans04"
+    },
+    {
+      "location": "ans05"
+    },
+    {
+      "location": "ans06"
     }
   ],
   "node_root": "~/workspace/next-beamer",
@@ -18,7 +33,11 @@
     {
       "name": "default",
       "include": "data_*.json",
-      "exclude": "data_slides.json"
+      "exclude": ["data_slides.json"]
+    },
+    {
+      "name": "guidebook",
+      "include": "guidebook.json"
     },
     {
       "name": "all",
