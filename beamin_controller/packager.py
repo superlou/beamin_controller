@@ -2,6 +2,7 @@ import os
 import fnmatch
 import re
 from zipfile import ZipFile
+import json
 
 
 class Packager():
@@ -11,7 +12,7 @@ class Packager():
 
         zip_file = ZipFile(self.zip_path, mode='w').close()
 
-    def add_matching(self, includes, excludes=None):
+    def add_matching(self, includes, excludes=None, validate_json=True):
         """
         Heavily based on http://stackoverflow.com/questions/5141437/filtering-os-walk-dirs-and-files
         """
@@ -32,6 +33,14 @@ class Packager():
                 files = [f for f in files if re.match(includes, f)]
 
                 for f in files:
+                    file_path = os.path.join(root, f)
+
+                    if validate_json and f.endswith('.json'):
+                        try:
+                            json.load(open(file_path))
+                        except ValueError as error:
+                            msg = '{} is not valid JSON. {}'.format(f, error)
+                            raise ValueError(msg)
+
                     relative_path = os.path.relpath(root, self.root)
-                    z.write(os.path.join(root, f),
-                            os.path.join(relative_path, f))
+                    z.write(file_path, os.path.join(relative_path, f))

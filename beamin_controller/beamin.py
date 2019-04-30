@@ -119,7 +119,11 @@ def main():
         sys.exit()
 
     if args.push:
-        package_node(args.push, 'node.zip')
+        try:
+            package_node(args.push, 'node.zip')
+        except ValueError as error:
+            print('Aborted push:', error)
+            args.push = False   # prevent pushing to targets
 
     if args.target:
         targets = get_targets(select=args.target)
