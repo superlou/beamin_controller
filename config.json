@@ -26,6 +26,9 @@
     },
     {
       "location": "ans06"
+    },
+    {
+      "location": "192.168.50.87"
     }
   ],
   "node_root": "~/workspace/next-beamer",
