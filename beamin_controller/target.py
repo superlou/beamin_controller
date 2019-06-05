@@ -29,7 +29,12 @@ class Target():
             return None
 
     def resolve_hostname(self, ip):
-        return socket.gethostbyaddr(ip)[0]
+        try:
+            hostname = socket.gethostbyaddr(ip)[0]
+        except socket.herror:
+            hostname = "(unknown host)"
+
+        return hostname
 
     def url(self, path=''):
         return "http://{}:{}/{}".format(self.ip, self.port, path)
