@@ -12,5 +12,6 @@ setup(name='beamin_controller',
                             'beamin_status=beamin_controller.status:main']
       },
       install_requires = [
-        'asciimatics'
+        'asciimatics',
+	'requests'
       ])
