@@ -16,7 +16,8 @@
       "location": "ans02"
     },
     {
-      "location": "ans03"
+      "location": "192.168.50.113",
+      "note": "ans03"
     },
     {
       "location": "ans04"
@@ -31,7 +32,7 @@
       "location": "192.168.50.87"
     }
   ],
-  "node_root": "~/workspace/next-beamer",
+  "node_root": "~/workspace/anext/next-beamer",
   "push_groups": [
     {
       "name": "default",

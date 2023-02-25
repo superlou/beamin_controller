@@ -78,8 +78,10 @@ def parse_args(args=None):
     parser.register('action', 'extend', ExtendAction)
     parser.add_argument('-l', '--list', help='list all targets',
                         action='store_true')
-    parser.add_argument('-p', '--push', help='stop info-beamer',
+    parser.add_argument('-p', '--push', help='push files to nodes',
                         nargs='*', action='extend')
+    parser.add_argument('-pg', '--push-groups', help='display push groups',
+                        action='store_true')
     parser.add_argument('-t', '--target', nargs='+', action='extend',
                         help='apply commands to specified targets')
     parser.add_argument('-d', '--discover', help='discover targets using SSDP',
@@ -107,6 +109,13 @@ def parse_args(args=None):
     return args
 
 
+def print_push_groups(push_groups):
+    for push_group in push_groups:
+        print(f"== {push_group['name']} ==")
+        print(f"Include: {push_group.get('include', '(none)')}")
+        print(f"Exclude: {push_group.get('exclude', '(none)')}")
+
+
 def main():
     args = parse_args()
 
@@ -117,6 +126,10 @@ def main():
     if args.discover:
         discover('beamin_target:control')
         sys.exit()
+
+    if args.push_groups:
+        config = json.load(open('config.json'))
+        print_push_groups(config["push_groups"])
 
     if args.push:
         try:
