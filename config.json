@@ -37,7 +37,8 @@
     {
       "name": "default",
       "include": "data_*.json",
-      "exclude": ["data_slides.json"]
+      "exclude": ["data_slides.json",
+                  "data_happening_now.json", "data_happening_soon.json"]
     },
     {
       "name": "guidebook",
